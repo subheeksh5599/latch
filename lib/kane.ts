@@ -34,7 +34,7 @@ type StepLine = { step: number; status: string; remark?: string };
 
 export function buildObjective(page: Page): string {
   return (
-    `Open the page. Type "tester@publock.dev" into the email input. ` +
+    `Open the page. Type "tester@provewall.dev" into the email input. ` +
     `Click the "${page.cta}" button. ` +
     `Confirm a success message containing "${page.successText}" appears on the page.`
   );

@@ -1,0 +1,31 @@
+{
+  "pageId": "waitlist",
+  "cta": "Sign up",
+  "verdict": "TRUE",
+  "checks": [
+    {
+      "step": 1,
+      "action": "navigate: Navigate to http://localhost:3000/examples/waitlist",
+      "status": "pass"
+    },
+    {
+      "step": 2,
+      "action": "type: Typing tester@provewall.dev into email address field",
+      "status": "pass"
+    },
+    {
+      "step": 3,
+      "action": "click: Clicking the Sign up button below the email input",
+      "status": "pass"
+    },
+    {
+      "step": 4,
+      "action": "assert: a success message containing \"You're on the list\" appears on the page",
+      "status": "pass"
+    }
+  ],
+  "kaneSessionId": "01d446f1-f06f-46a3-975a-d00bd5546b8c",
+  "videoTrace": "https://test-manager.lambdatest.com/projects/01M0FN6CN7ZMC12S10H7TXH03E/test-cases/01M0FSZM5FFB30F38SQ105R949/dashboard/share/US_EQX5WC4N9ERWAAMZE7HMQN6ZKFQPCC7MO36IZ09E3QIOWJ5EYBHEWC6QN3Y6EVMN?type=summary&agentView=true&fqdn=summary-page",
+  "verifiedAt": "2026-08-20T14:44:38.305Z",
+  "signature": "045a8c61924cc443b0f5a0351755e870500dc179fa8141fd487b8eba22f6a474"
+}

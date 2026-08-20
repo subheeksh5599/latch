@@ -14,7 +14,7 @@ export default async function ReceiptView({
 
   return (
     <main>
-      <p className="muted">Publock receipt</p>
+      <p className="muted">Provewall receipt</p>
       <h1>
         {valid ? (
           <span className="verdict-true">✓ Signature valid</span>

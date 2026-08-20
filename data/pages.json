@@ -7,9 +7,9 @@
       "successText": "You're on the list",
       "wired": true,
       "published": true,
-      "receiptId": "waitlist-94c35252",
+      "receiptId": "waitlist-248c42ba",
       "receipts": [
-        "waitlist-94c35252"
+        "waitlist-248c42ba"
       ]
     },
     {
@@ -19,9 +19,9 @@
       "successText": "Payment confirmed",
       "wired": true,
       "published": true,
-      "receiptId": "checkout-9ac2da1e",
+      "receiptId": "checkout-2cd751d2",
       "receipts": [
-        "checkout-9ac2da1e"
+        "checkout-2cd751d2"
       ]
     }
   ]

@@ -8,7 +8,7 @@ const RECEIPT_DIR = process.env.RECEIPT_DIR
   : path.join(process.cwd(), "data", "receipts");
 
 function secret(): string {
-  return process.env.RECEIPT_SECRET ?? "publock-dev-secret";
+  return process.env.RECEIPT_SECRET ?? "provewall-dev-secret";
 }
 
 /** Deterministic signature over the receipt payload (everything but the sig). */

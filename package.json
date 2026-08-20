@@ -1,5 +1,5 @@
 {
-  "name": "publock",
+  "name": "provewall",
   "version": "0.1.0",
   "private": true,
   "description": "A page that refuses to go live until a real browser proves its button works.",
@@ -9,7 +9,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "publock": "node --env-file-if-exists=.env --import tsx scripts/publock.ts",
+    "provewall": "node --env-file-if-exists=.env --import tsx scripts/provewall.ts",
     "reset": "node --import tsx scripts/reset.ts",
     "test": "node --import tsx --test test/*.test.ts"
   },

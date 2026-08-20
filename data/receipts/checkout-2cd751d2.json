@@ -1,0 +1,31 @@
+{
+  "pageId": "checkout",
+  "cta": "Buy now",
+  "verdict": "TRUE",
+  "checks": [
+    {
+      "step": 1,
+      "action": "navigate: Navigate to http://localhost:3000/examples/checkout",
+      "status": "pass"
+    },
+    {
+      "step": 2,
+      "action": "type: Typing tester@provewall.dev into email address field",
+      "status": "pass"
+    },
+    {
+      "step": 3,
+      "action": "click: Clicking the Buy now button",
+      "status": "pass"
+    },
+    {
+      "step": 4,
+      "action": "assert: a success message containing \"Payment confirmed\" appears on the page",
+      "status": "pass"
+    }
+  ],
+  "kaneSessionId": "4bf7bb33-713c-442e-8776-140a8faa8129",
+  "videoTrace": "https://test-manager.lambdatest.com/projects/01M0FN6CN7ZMC12S10H7TXH03E/test-cases/01M0FT967FS06ABFH1JAXGRMFW/dashboard/share/US_MOTG4HCMUDDQF22JAZOLIHG6ZFBKT09UUZHUQ12CNWY00G2LSALTNCN7HHE77LVL?type=summary&agentView=true&fqdn=summary-page",
+  "verifiedAt": "2026-08-20T14:49:47.412Z",
+  "signature": "63663232fbfe8619b564086b8f654811f1fd7f2189abe8eea9386004723fe112"
+}
