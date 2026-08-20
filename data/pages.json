@@ -1,0 +1,28 @@
+{
+  "pages": [
+    {
+      "id": "waitlist",
+      "title": "Join the Nimbus waitlist",
+      "cta": "Sign up",
+      "successText": "You're on the list",
+      "wired": true,
+      "published": true,
+      "receiptId": "waitlist-94c35252",
+      "receipts": [
+        "waitlist-94c35252"
+      ]
+    },
+    {
+      "id": "checkout",
+      "title": "Buy the Nimbus Pro plan",
+      "cta": "Buy now",
+      "successText": "Payment confirmed",
+      "wired": true,
+      "published": true,
+      "receiptId": "checkout-9ac2da1e",
+      "receipts": [
+        "checkout-9ac2da1e"
+      ]
+    }
+  ]
+}

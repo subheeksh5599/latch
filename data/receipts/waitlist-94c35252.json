@@ -1,0 +1,31 @@
+{
+  "pageId": "waitlist",
+  "cta": "Sign up",
+  "verdict": "TRUE",
+  "checks": [
+    {
+      "step": 1,
+      "action": "navigate: Navigate to http://localhost:3000/examples/waitlist",
+      "status": "pass"
+    },
+    {
+      "step": 2,
+      "action": "type: Typing tester@publock.dev into the email field",
+      "status": "pass"
+    },
+    {
+      "step": 3,
+      "action": "click: Clicking the Sign up button below the email input in the waitlist form",
+      "status": "pass"
+    },
+    {
+      "step": 4,
+      "action": "assert: a success message containing \"You're on the list\" appears on the page",
+      "status": "pass"
+    }
+  ],
+  "kaneSessionId": "8c2b59e1-1f45-4981-98a6-bd5fb2e01571",
+  "videoTrace": "https://test-manager.lambdatest.com/projects/01M0FN6CN7ZMC12S10H7TXH03E/test-cases/01M0FR3V123V4X4AJXSVZ8P705/dashboard/share/US_YG2QZKCCSUR4A9FUZ52CZBLEY9ALOJ80ETFQ8TRW9QPWGFQIBY6I4CFQUTUK1WD3?type=summary&agentView=true&fqdn=summary-page",
+  "verifiedAt": "2026-08-20T14:11:14.075Z",
+  "signature": "cb9fcc04c8fb8dadd4f7e043ee144408045726d4f52db82878054ad52e6e2f57"
+}

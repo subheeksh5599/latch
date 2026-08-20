@@ -1,0 +1,31 @@
+{
+  "pageId": "checkout",
+  "cta": "Buy now",
+  "verdict": "TRUE",
+  "checks": [
+    {
+      "step": 1,
+      "action": "navigate: Navigate to http://localhost:3000/examples/checkout",
+      "status": "pass"
+    },
+    {
+      "step": 2,
+      "action": "type: Typing tester@publock.dev into the email address field",
+      "status": "pass"
+    },
+    {
+      "step": 3,
+      "action": "click: Clicking Buy now button below the email input",
+      "status": "pass"
+    },
+    {
+      "step": 4,
+      "action": "assert: a success message containing \"Payment confirmed\" appears on the page",
+      "status": "pass"
+    }
+  ],
+  "kaneSessionId": "5e9103ff-a94d-4a12-addb-e57beb8eddda",
+  "videoTrace": "https://test-manager.lambdatest.com/projects/01M0FN6CN7ZMC12S10H7TXH03E/test-cases/01M0FRA3Q306RRB5ATNJN2NK8F/dashboard/share/US_SYG55XE2OI90LEBP90NG4TI4FQBI7B40RHKXXGPHUDL35YFZJPPCHRA12HRTBUQZ?type=summary&agentView=true&fqdn=summary-page",
+  "verifiedAt": "2026-08-20T14:14:35.995Z",
+  "signature": "5373d180d0ec09c7c313b4a3e91dee91814346b0285df84a3ab3601a4deb24aa"
+}
