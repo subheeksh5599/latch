@@ -37,4 +37,4 @@ Anything else → FALSE → do not publish. On a genuinely dead button Kane retu
 or `stuck.ap_stuck`, and its `summary` describes the bug in plain language —
 which you can feed straight back to the agent that will fix the wiring.
 
-Extracted from the Provewall project (TestMu AI Kane CLI Hackathon).
+Extracted from the Latch project (TestMu AI Kane CLI Hackathon).

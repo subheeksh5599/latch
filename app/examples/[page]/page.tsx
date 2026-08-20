@@ -17,7 +17,7 @@ export default async function Preview({
       <p className="muted">Preview · not yet published</p>
       <h1>{page.title}</h1>
       <p className="muted">
-        One button that matters: <strong>{page.cta}</strong>. Provewall will not
+        One button that matters: <strong>{page.cta}</strong>. Latch will not
         let this page go live until a real browser proves it works.
       </p>
       <div className="panel">

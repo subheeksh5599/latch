@@ -1,14 +1,14 @@
 <div align="center">
 
-# Provewall
+# Latch
 
 **A page that refuses to go live until a real browser proves its button works.**
 
 <p align="center">
-  <a href="https://provewall.vercel.app"><strong>🔗 Live Demo</strong></a> &bull;
-  <a href="https://github.com/subheeksh5599/provewall"><strong>📦 GitHub</strong></a> &bull;
+  <a href="https://latch.vercel.app"><strong>🔗 Live Demo</strong></a> &bull;
+  <a href="https://github.com/subheeksh5599/latch"><strong>📦 GitHub</strong></a> &bull;
   <a href="#see-it-in-one-command">See it in one command</a> &bull;
-  <a href="#how-provewall-works">How it works</a> &bull;
+  <a href="#how-latch-works">How it works</a> &bull;
   <a href="#run-it-locally">Run locally</a>
 </p>
 
@@ -19,9 +19,9 @@
   <img src="https://img.shields.io/badge/license-MIT-yellow?style=flat-square">
 </p>
 
-Provewall sits between an AI-built page and the internet. Before a page can
+Latch sits between an AI-built page and the internet. Before a page can
 publish, Kane CLI opens a **real browser** and clicks the one button that matters
-— Sign up, Buy, Book. If that button is broken, Provewall **refuses to publish**,
+— Sign up, Buy, Book. If that button is broken, Latch **refuses to publish**,
 the loop reads Kane's failure and fixes the wiring, Kane re-runs, and the page
 only goes live once the button is proven to work — carrying a **receipt** any
 visitor can verify. The refusal is the product.
@@ -45,7 +45,7 @@ run browser checks on a schedule and **alert you after the fact** — the visito
 already bounced. None of them stand between your build and the publish button and
 say "no, not until this actually works."
 
-Provewall closes that gap: the page cannot go live until a real browser proved
+Latch closes that gap: the page cannot go live until a real browser proved
 the money-path, and every published page ships a receipt proving it.
 
 ---
@@ -54,39 +54,39 @@ the money-path, and every published page ships a receipt proving it.
 
 ```bash
 # Run the publish gate against the example page and watch Kane decide
-npm run provewall -- --page waitlist
+npm run latch -- --page waitlist
 ```
 
 Real output from a real run (`data/pages.json` ships the waitlist button
 genuinely unwired, so the first attempt fails for real):
 
 ```text
-Provewall gate · page "waitlist" · CTA "Sign up"
+Latch gate · page "waitlist" · CTA "Sign up"
 Preview base: http://localhost:3000
 
 ▶ Gate attempt 1 · http://localhost:3000/examples/waitlist
-  verdict: FALSE · session 4819dba9-f183-4697-980a-c3362cbe2a28
+  verdict: FALSE · session 55372b19-6835-4833-8788-404185bd9c57
   ✗ publish BLOCKED
-  fix · After submitting the form, the automation assumed the success message would appear right away. When it did not see that state quickly, it tried an extra Enter press and then ran out of useful actions. → wiring the "waitlist" CTA handler
+  fix · The signup action appears to do nothing visible, so the page never reaches the completed state that should reassure the user they were added to the waitlist. → wiring the "waitlist" CTA handler
 
 ▶ Gate attempt 2 · http://localhost:3000/examples/waitlist
-  verdict: TRUE · session 01d446f1-f06f-46a3-975a-d00bd5546b8c
-  ✓ publish ALLOWED · receipt waitlist-248c42ba
+  verdict: TRUE · session ddf8e3db-92af-4730-8f51-fec2d958b41e
+  ✓ publish ALLOWED · receipt waitlist-1f82a8b0
 
 ─── result ───
 attempts:  2
 published: true
-receipt:   waitlist-248c42ba
+receipt:   waitlist-1f82a8b0
 ```
 
-The waitlist button wasn't wired. Provewall caught it in a real browser,
+The waitlist button wasn't wired. Latch caught it in a real browser,
 **blocked the publish**, wired the CTA, re-verified, and only then let the page
 go live — with a receipt you can check at
-[`/api/receipt/waitlist-248c42ba`](https://provewall.vercel.app/api/receipt/waitlist-248c42ba).
+[`/api/receipt/waitlist-1f82a8b0`](https://latch.vercel.app/api/receipt/waitlist-1f82a8b0).
 
 ---
 
-## How Provewall works
+## How Latch works
 
 ### 1 · A page with one primary CTA
 
@@ -97,7 +97,7 @@ was never wired, so clicking it does nothing.
 ### 2 · Publish runs the gate — Kane clicks the button in a real browser
 
 Kane's step lines carry `status: "running"/"done"` — not pass/fail. The
-authoritative verdict lives in the `run_end` event, so Provewall re-derives it from
+authoritative verdict lives in the `run_end` event, so Latch re-derives it from
 several raw fields at once (`lib/kane.ts`):
 
 ```typescript
@@ -117,7 +117,7 @@ export function deriveVerdict(runEnd, steps): Verdict {
 
 On a FALSE verdict the page **does not publish**. On the dead button Kane returns
 `status: "failed"` with a `reason_code` like `assertion_error.confirmed_product_bug`
-and a plain-language `summary` of the bug — which Provewall feeds back into the fix.
+and a plain-language `summary` of the bug — which Latch feeds back into the fix.
 
 ### 4 · The loop fixes it and re-runs
 
@@ -148,14 +148,14 @@ browser at this time, here's the video, and the signature checks out.
   "verdict": "TRUE",
   "checks": [
     { "step": 1, "action": "navigate: Navigate to .../examples/waitlist", "status": "pass" },
-    { "step": 2, "action": "type: Typing tester@provewall.dev into the email field", "status": "pass" },
-    { "step": 3, "action": "click: Clicking the Sign up button below the email input", "status": "pass" },
+    { "step": 2, "action": "type: Typing the email address in the email input field", "status": "pass" },
+    { "step": 3, "action": "click: Clicking Sign up button below email input", "status": "pass" },
     { "step": 4, "action": "assert: a success message containing \"You're on the list\" appears on the page", "status": "pass" }
   ],
-  "kaneSessionId": "01d446f1-f06f-46a3-975a-d00bd5546b8c",
-  "videoTrace": "https://test-manager.lambdatest.com/.../share/US_EQX5WC4N9ERW...",
-  "verifiedAt": "2026-08-20T14:44:38.305Z",
-  "signature": "045a8c61924cc443b0f5a0351755e870500dc179fa8141fd487b8eba22f6a474"
+  "kaneSessionId": "ddf8e3db-92af-4730-8f51-fec2d958b41e",
+  "videoTrace": "https://test-manager.lambdatest.com/.../share/US_M1LLBW1K...",
+  "verifiedAt": "2026-08-20T15:04:07.756Z",
+  "signature": "fccd3bb7ab4416a015cf39fd9cb1bff47dd7a0e95c04569970167bda0d64acc4"
 }
 ```
 
@@ -163,8 +163,8 @@ Both example flows are live and verified:
 
 | Page | Live | Receipt (verify) |
 |------|------|------------------|
-| Waitlist (`Sign up`) | [/p/waitlist](https://provewall.vercel.app/p/waitlist) | [waitlist-248c42ba](https://provewall.vercel.app/api/receipt/waitlist-248c42ba) |
-| Checkout (`Buy now`) | [/p/checkout](https://provewall.vercel.app/p/checkout) | [checkout-2cd751d2](https://provewall.vercel.app/api/receipt/checkout-2cd751d2) |
+| Waitlist (`Sign up`) | [/p/waitlist](https://latch.vercel.app/p/waitlist) | [waitlist-1f82a8b0](https://latch.vercel.app/api/receipt/waitlist-1f82a8b0) |
+| Checkout (`Buy now`) | [/p/checkout](https://latch.vercel.app/p/checkout) | [checkout-d2da5b93](https://latch.vercel.app/api/receipt/checkout-d2da5b93) |
 
 ---
 
@@ -172,7 +172,7 @@ Both example flows are live and verified:
 
 ```
    ┌──────────────┐      ┌──────────────────────┐      ┌────────────────┐
-   │  page + CTA   │      │   Provewall gate        │      │   Kane CLI      │
+   │  page + CTA   │      │   Latch gate        │      │   Kane CLI      │
    │  (Next.js)    ├─────▶│  runGate() locally    ├─────▶│  real Chrome    │
    └──────────────┘      │  parse step NDJSON    │◀─────┤  click + verify │
           ▲              └──────────┬───────────┘      └────────────────┘
@@ -195,7 +195,7 @@ local triggering; it only works where a browser is available.
 | Component | Tech | Responsibility |
 |-----------|------|----------------|
 | Page + CTA | Next.js / React | One primary CTA with a genuinely wire-able success state |
-| Provewall gate | Node + Kane CLI | Run the real-browser check, parse NDJSON, re-derive verdict |
+| Latch gate | Node + Kane CLI | Run the real-browser check, parse NDJSON, re-derive verdict |
 | Self-heal loop | TypeScript | Read Kane's failure, wire the CTA, re-verify |
 | Receipt issuer | Node (HMAC-SHA256) | Sign a receipt on green; serve at `/api/receipt/:id` |
 | Live page + badge | React | Publish only on green; show a visitor-verifiable receipt |
@@ -205,11 +205,11 @@ local triggering; it only works where a browser is available.
 ## Engineering decisions
 
 **1 · The check belongs at publish, not per-visitor.** A real-browser check takes
-tens of seconds and costs credits — you can't run it on every page load. Provewall
+tens of seconds and costs credits — you can't run it on every page load. Latch
 runs it **once, at the publish gate**: prove the button, then ship a fast normal
 page with a receipt.
 
-**2 · Proven at publish, not "forever true".** Provewall never claims a page can
+**2 · Proven at publish, not "forever true".** Latch never claims a page can
 never break. It claims: **proven working in a real browser at publish time, with
 a receipt.** The receipt timestamp says exactly when.
 
@@ -257,8 +257,8 @@ Tests run the parser against **real Kane NDJSON** captured from actual runs
 
 ```bash
 # Clone
-git clone https://github.com/subheeksh5599/provewall.git
-cd provewall
+git clone https://github.com/subheeksh5599/latch.git
+cd latch
 
 # Install
 npm install
@@ -276,7 +276,7 @@ npm run dev                         # → http://localhost:3000
 
 # In a second terminal: reset to the broken state, then run the gate
 npm run reset -- --page waitlist
-npm run provewall -- --page waitlist
+npm run latch -- --page waitlist
 
 # Tests
 npm test

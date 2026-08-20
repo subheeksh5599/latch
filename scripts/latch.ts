@@ -1,7 +1,7 @@
 /**
  * The publish gate, run from the command line (Kane needs a real local Chrome).
  *
- *   npm run provewall -- --page waitlist
+ *   npm run latch -- --page waitlist
  *
  * Runs the real-browser gate against the page's preview URL, blocks publish on
  * a red verdict, wires the CTA, re-runs, and publishes with a signed receipt
@@ -25,7 +25,7 @@ async function main() {
     process.exit(2);
   }
 
-  console.log(`Provewall gate · page "${pageId}" · CTA "${page.cta}"`);
+  console.log(`Latch gate · page "${pageId}" · CTA "${page.cta}"`);
   console.log(`Preview base: ${previewBase}`);
 
   const outcome = await healAndPublish(pageId, previewBase);

@@ -8,7 +8,7 @@ export default async function Home() {
 
   return (
     <main>
-      <h1>Provewall</h1>
+      <h1>Latch</h1>
       <p className="muted">
         A page that refuses to go live until a real browser proves its button
         works.
@@ -16,7 +16,7 @@ export default async function Home() {
 
       <div className="panel">
         <p>
-          Before a page can publish, Provewall opens a <strong>real browser</strong>{" "}
+          Before a page can publish, Latch opens a <strong>real browser</strong>{" "}
           and clicks the one button that matters. If the button is broken, the
           publish is <span className="verdict-false">blocked</span>. Once it is
           proven working, the page goes live carrying a{" "}
@@ -49,7 +49,7 @@ export default async function Home() {
       <p className="muted" style={{ fontSize: 13, marginTop: 32 }}>
         The publish gate runs a real browser locally (Kane needs a real Chrome),
         so it is triggered from the command line:{" "}
-        <code>npm run provewall -- --page waitlist</code>.
+        <code>npm run latch -- --page waitlist</code>.
       </p>
     </main>
   );
