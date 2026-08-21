@@ -1,0 +1,31 @@
+{
+  "pageId": "waitlist",
+  "cta": "Sign up",
+  "verdict": "TRUE",
+  "checks": [
+    {
+      "step": 1,
+      "action": "navigate: Navigate to http://localhost:3000/examples/waitlist",
+      "status": "pass"
+    },
+    {
+      "step": 2,
+      "action": "type: Typing tester@latch.dev into the email address field",
+      "status": "pass"
+    },
+    {
+      "step": 3,
+      "action": "click: Clicking the Sign up button below the email input",
+      "status": "pass"
+    },
+    {
+      "step": 4,
+      "action": "assert: a success message containing \"You're on the list\" appears on the page",
+      "status": "pass"
+    }
+  ],
+  "kaneSessionId": "9b4eedbe-bc9f-4a69-aad8-9a3d4db77e9f",
+  "videoTrace": "https://test-manager.lambdatest.com/projects/01M0FN6CN7ZMC12S10H7TXH03E/test-cases/01M0H6G5KA1TZVRQ43G4WXVPJ2/dashboard/share/US_29Y9V8CG6F4OBY9EITAR0XXEG327LRPXKQJW4J8M8DCEBM9D6OR077HT4MMO013C?type=summary&agentView=true&fqdn=summary-page",
+  "verifiedAt": "2026-08-21T03:41:46.311Z",
+  "signature": "d6fea552ca15e3cdd31bb4ba4fceaf086f0300cdeecaa8aaa9383712ab9f6099"
+}
