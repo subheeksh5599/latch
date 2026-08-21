@@ -4,9 +4,6 @@
 
 ### A page that refuses to go live until a real browser proves every button that matters works.
 
-[![Live demo](https://img.shields.io/badge/●_live-latch.vercel.app-000000)](https://latch.vercel.app)
-[![Waitlist receipt](https://img.shields.io/badge/receipt-waitlist--1f82a8b0-2ecc71)](https://latch.vercel.app/api/receipt/waitlist-1f82a8b0)
-[![Checkout receipt](https://img.shields.io/badge/receipt-checkout--d2da5b93-2ecc71)](https://latch.vercel.app/api/receipt/checkout-d2da5b93)
 [![Kane CLI](https://img.shields.io/badge/verifier-Kane%20CLI%200.8.4-2563eb)](https://www.npmjs.com/package/@testmuai/kane-cli)
 [![GitHub Action](https://img.shields.io/badge/GitHub%20Action-composite-24292f)](action.yml)
 [![Upstream PR](https://img.shields.io/badge/upstream-LambdaTest%2Fkane--cli%23175-8b5cf6)](https://github.com/LambdaTest/kane-cli/pull/175)
@@ -16,9 +13,9 @@
 
 Latch is a publish gate that sits between an AI-built page and the internet. Before a page can go live, **Kane CLI opens a real browser and clicks every CTA that matters** — Sign up, Buy, Book a demo. If any one is broken, Latch **refuses to publish**, the loop reads Kane's failure and wires the dead CTA, Kane re-runs, and the page only ships once every CTA is proven to work — carrying a single **HMAC-signed receipt** any visitor can verify. On green publish, an optional Slack/Discord/generic webhook fires. It ships with a drop-in **GitHub Action** so any repo can gate its own PRs. The refusal is the product.
 
-### ▶ Live now — real-browser publish gate at **[latch.vercel.app](https://latch.vercel.app)**
+### ▶ Runs locally — real-browser publish gate you drive on your own machine
 
-**[ Live demo ↗ ](https://latch.vercel.app)** · **[ Waitlist receipt ↗ ](https://latch.vercel.app/api/receipt/waitlist-1f82a8b0)** · **[ Checkout receipt ↗ ](https://latch.vercel.app/api/receipt/checkout-d2da5b93)** · **[ GitHub Action ↓ ](#github-action)** · **[ Publish webhook ↓ ](#publish-webhook)** · **[ Upstream PR ↗ ](https://github.com/LambdaTest/kane-cli/pull/175)** · **[ Architecture ↓ ](#architecture)** · **[ Run it locally ↓ ](#run-it-locally)**
+**[ Run it locally ↓ ](#run-it-locally)** · **[ GitHub Action ↓ ](#github-action)** · **[ Publish webhook ↓ ](#publish-webhook)** · **[ Upstream PR ↗ ](https://github.com/LambdaTest/kane-cli/pull/175)** · **[ Architecture ↓ ](#architecture)**
 
 Built for the **TestMu AI Kane CLI Online Hackathon** · Track: *Apps that verify themselves*. MIT licensed.
 
@@ -88,7 +85,7 @@ published: true
 receipt:   waitlist-1f82a8b0
 ```
 
-The waitlist button wasn't wired. Latch caught it in a real Chrome, **blocked the publish**, wired the CTA, re-verified, and only then let the page go live — with a receipt you can inspect at [`/api/receipt/waitlist-1f82a8b0`](https://latch.vercel.app/api/receipt/waitlist-1f82a8b0). Try `--page launch` and you'll see the same loop, but with **two** CTAs — Get early access + Book a demo — and one receipt covering both. That is the product in one command.
+The waitlist button wasn't wired. Latch caught it in a real Chrome, **blocked the publish**, wired the CTA, re-verified, and only then let the page go live — with a receipt you can inspect locally at `/api/receipt/waitlist-1f82a8b0`. Try `--page launch` and you'll see the same loop, but with **two** CTAs — Get early access + Book a demo — and one receipt covering both. That is the product in one command.
 
 ---
 
@@ -109,7 +106,7 @@ None of them stand between your build and the publish button and say *"no, not u
 
 ## How Latch works
 
-Five capabilities, all enforced by a real-browser gate before Vercel sees the deploy.
+Five capabilities, all enforced by a real-browser gate before a page is marked published.
 
 ### 1 · A page with one or more primary CTAs
 
@@ -194,13 +191,13 @@ The live page carries a **"Verified working — view receipt"** badge. A visitor
 
 On the same green publish the [publish webhook](#publish-webhook) fires — Slack, Discord, or any generic HTTP endpoint gets a signed POST with the receipt id and links.
 
-All example flows are live and verified end-to-end:
+All example flows are wired and verified end-to-end when you run locally (`npm run dev`):
 
-| Page | CTAs | Live | Receipt (verify) |
-|------|------|------|------------------|
-| Waitlist | Sign up | [/p/waitlist](https://latch.vercel.app/p/waitlist) | [waitlist-1f82a8b0](https://latch.vercel.app/api/receipt/waitlist-1f82a8b0) |
-| Checkout | Buy now | [/p/checkout](https://latch.vercel.app/p/checkout) | [checkout-d2da5b93](https://latch.vercel.app/api/receipt/checkout-d2da5b93) |
-| Launch | Get early access · Book a demo | [/examples/launch](https://latch.vercel.app/examples/launch) | issued on first green publish |
+| Page | CTAs | Local path | Receipt (verify) |
+|------|------|------------|------------------|
+| Waitlist | Sign up | `/p/waitlist` | `waitlist-1f82a8b0` |
+| Checkout | Buy now | `/p/checkout` | `checkout-d2da5b93` |
+| Launch | Get early access · Book a demo | `/examples/launch` | issued on first green publish |
 
 ---
 
@@ -219,8 +216,8 @@ All example flows are live and verified end-to-end:
           └─────────────────────────┘
                                     │
                          ┌──────────▼───────────┐
-                         │  Live page + receipt │  ← deployed on Vercel
-                         │  (visitor-verifiable)│
+                         │  Published page +    │  ← served by `next dev` / `next start`
+                         │  receipt (verifiable)│
                          └──────────────────────┘
 ```
 
@@ -233,7 +230,7 @@ All example flows are live and verified end-to-end:
 5. **Any FALSE verdict** → publish is refused, raw streams are saved under `data/runs/<page>-<cta>-<ts>.ndjson`, the loop reads each red CTA's failure summary and calls `agentFix(pageId, ctaId, ...)` to wire just those CTAs.
 6. **All TRUE** → `buildReceipt(results[])` signs one page-level payload with HMAC-SHA256, `saveReceipt()` writes it under `data/receipts/`, the page record flips to `published: true`.
 7. **Publish webhook fires** — `notifyPublish()` POSTs a signed JSON payload to `PUBLISH_WEBHOOK_URL` if set. Silent no-op if unset.
-8. **Vercel serves** the published page with a verification badge; visitors hit `/api/receipt/:id` to re-verify the signature.
+8. **Next.js serves** the published page with a verification badge; visitors hit `/api/receipt/:id` to re-verify the signature.
 
 ### Component by component
 
@@ -301,8 +298,8 @@ Every green publish fires an optional webhook (`lib/webhook.ts`) — Slack, Disc
   "event": "latch.published",
   "pageId": "launch",
   "receiptId": "launch-9a3f21bd",
-  "receiptUrl": "https://latch.vercel.app/api/receipt/launch-9a3f21bd",
-  "liveUrl": "https://latch.vercel.app/p/launch",
+  "receiptUrl": "http://localhost:3000/api/receipt/launch-9a3f21bd",
+  "liveUrl": "http://localhost:3000/p/launch",
   "verifiedAt": "2026-08-20T15:04:07.756Z",
   "ctas": ["Get early access", "Book a demo"],
   "text": "✅ Latch published `launch` — 2 CTAs proven working in a real browser.\nReceipt: https://...\nLive: https://..."
@@ -442,15 +439,15 @@ Every claim maps to a mechanism in code, not a promise:
 | **Multi-CTA pages** — one gate cycle covers every CTA; one receipt covers all | **Real** — `launch` page ships two CTAs, both gated, both in one signed receipt |
 | **HMAC-SHA256 receipts** — sign, verify, refuse-on-red, tamper-detect, multi-page-refuse | **Real code** — `lib/receipt.ts`, covered by 9 signature tests |
 | **Persisted Kane runs** — every attempt kept under `data/runs/<page>-<cta>-<ts>.ndjson` | **Real** — one file per CTA per attempt |
-| **Signed receipts** — `data/receipts/` with 5 receipts across pages | **Real** — verifiable at `/api/receipt/:id` on the live deploy |
-| **Live example pages** — waitlist + checkout + launch, publish-gated | **Live** at [/p/waitlist](https://latch.vercel.app/p/waitlist), [/p/checkout](https://latch.vercel.app/p/checkout), [/examples/launch](https://latch.vercel.app/examples/launch) |
-| **Receipt viewer** — visitor-verifiable badge → HMAC re-check → per-CTA check list | **Live** at `/r/:id` on the deploy |
+| **Signed receipts** — `data/receipts/` with 5 receipts across pages | **Real** — verifiable at `/api/receipt/:id` when running locally |
+| **Example pages** — waitlist + checkout + launch, publish-gated | **Real** — served at `/p/waitlist`, `/p/checkout`, `/examples/launch` under `npm run dev` |
+| **Receipt viewer** — visitor-verifiable badge → HMAC re-check → per-CTA check list | **Real** — served at `/r/:id` under `npm run dev` |
 | **Publish webhook** — Slack/Discord/generic POST with HMAC-signed body | **Real code** — `lib/webhook.ts`, covered by 4 tests, `PUBLISH_WEBHOOK_URL` toggle |
 | **GitHub Action** — composite action to run the gate on PRs, upload receipt artifact | **Real** — [`action.yml`](action.yml) + [`.github/workflows/latch-example.yml`](.github/workflows/latch-example.yml) |
 | **CI workflow** — install, lint, test, build on every push and PR | **Real** — [`.github/workflows/ci.yml`](.github/workflows/ci.yml) |
 | **Contribution: reusable Kane publish-gate template** | **Real** — [`contrib/publish-gate.kane.md`](contrib/publish-gate.kane.md), submitted as [kane-cli#175](https://github.com/LambdaTest/kane-cli/pull/175) |
 | **Test suite** — parser + receipt + multi-CTA + webhook, real Kane NDJSON fixtures | **Real** — 20/20 passing |
-| **`POST /api/gate` on Vercel** | **Local-only by design** — needs a real browser on the host; Vercel serverless has none. The GitHub Action is the hosted path. |
+| **`POST /api/gate`** | **Local-only by design** — needs a real browser on the host. Serverless targets have none; the GitHub Action is the hosted path. |
 
 ---
 
@@ -552,14 +549,13 @@ The first `npm run latch -- --page waitlist` will fail on purpose (the CTA ships
 
 | | |
 |---|---|
-| **Live site** | **[latch.vercel.app](https://latch.vercel.app)** — Vercel |
-| **Waitlist receipt** | **[/api/receipt/waitlist-1f82a8b0](https://latch.vercel.app/api/receipt/waitlist-1f82a8b0)** — HMAC-verified |
-| **Checkout receipt** | **[/api/receipt/checkout-d2da5b93](https://latch.vercel.app/api/receipt/checkout-d2da5b93)** — HMAC-verified |
+| **Hosted site** | *None* — Latch runs locally; the gate needs a real browser on the host |
+| **Local run** | `npm run dev` → pages at `http://localhost:3000/p/*`, receipts at `/api/receipt/:id` |
 | **GitHub Action** | **[`action.yml`](action.yml)** — composite action; example workflow at [`.github/workflows/latch-example.yml`](.github/workflows/latch-example.yml) |
 | **CI** | **[`.github/workflows/ci.yml`](.github/workflows/ci.yml)** — install, lint, test, build on every push and PR |
 | **Upstream contribution** | **[LambdaTest/kane-cli#175](https://github.com/LambdaTest/kane-cli/pull/175)** — reusable publish-gate template |
 
-The **live pages and receipt viewer** are deployed on Vercel's free tier. The **gate itself runs where a real browser is available** — your machine, the GitHub Action, or any container with Chrome. `POST /api/gate` on the Vercel deploy is intentionally a no-op-in-serverless: there is no browser to drive there, and pretending otherwise would break the honesty guarantee.
+The **gate runs where a real browser is available** — your machine or the GitHub Action. There is no hosted demo: serverless targets have no browser to drive, and shipping a no-op `POST /api/gate` behind a "live" URL would break the honesty guarantee. Run it locally, or wire the composite action into your repo's PRs.
 
 ---
 
@@ -627,7 +623,7 @@ latch/
 - **CI:** GitHub Actions — install, lint, test, build on every push and PR
 - **Distribution:** Composite GitHub Action (`action.yml`) — any repo can `uses: subheeksh5599/latch@v1`
 - **Notifications:** Fetch + HMAC-SHA256 webhook signatures, Slack/Discord/generic compatible
-- **Hosting:** Vercel (pages + receipt API); gate runs on any host with a real browser
+- **Hosting:** None — runs locally (`npm run dev`) or via the GitHub Action; gate needs a real browser on the host
 
 ---
 
