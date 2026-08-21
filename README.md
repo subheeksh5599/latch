@@ -317,7 +317,7 @@ npm test
 | Phase 1 — Hackathon MVP | One CTA flow, real Kane gate, block-on-red, self-heal, publish-on-green, receipt | ✅ Done |
 | Phase 2 — Second flow | Buy/checkout money-path to the same depth | ✅ Done |
 | Phase 3 — Re-verify + history | Gate re-runs each publish; every receipt kept in page history | ✅ Done |
-| Phase 4 — Host contribution | Reusable Kane publish-gate template in [`contrib/`](contrib/publish-gate.kane.md), ready to submit upstream | ✅ Prepared |
+| Phase 4 — Host contribution | Reusable Kane publish-gate template in [`contrib/`](contrib/publish-gate.kane.md), submitted upstream as [LambdaTest/kane-cli#175](https://github.com/LambdaTest/kane-cli/pull/175) | ✅ Submitted |
 
 ---
 
