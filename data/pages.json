@@ -5,9 +5,9 @@
       "title": "Join the Nimbus waitlist",
       "cta": "Sign up",
       "successText": "You're on the list",
-      "wired": true,
-      "published": true,
-      "receiptId": "waitlist-1f82a8b0",
+      "wired": false,
+      "published": false,
+      "receiptId": null,
       "receipts": [
         "waitlist-1f82a8b0"
       ]
@@ -17,9 +17,9 @@
       "title": "Buy the Nimbus Pro plan",
       "cta": "Buy now",
       "successText": "Payment confirmed",
-      "wired": true,
-      "published": true,
-      "receiptId": "checkout-d2da5b93",
+      "wired": false,
+      "published": false,
+      "receiptId": null,
       "receipts": [
         "checkout-d2da5b93"
       ]
