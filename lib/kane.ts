@@ -1,7 +1,7 @@
 import { spawn } from "node:child_process";
 import { promises as fs } from "node:fs";
 import path from "node:path";
-import type { GateResult, Page, Step, Verdict } from "./types";
+import type { Cta, GateResult, Page, Step, Verdict } from "./types";
 
 /**
  * What the Kane NDJSON stream actually looks like (learned from real runs):
@@ -32,11 +32,12 @@ export type KaneRunEnd = {
 
 type StepLine = { step: number; status: string; remark?: string };
 
-export function buildObjective(page: Page): string {
+/** Build a Kane objective targeting one specific CTA on the page. */
+export function buildObjective(cta: Cta): string {
   return (
-    `Open the page. Type "tester@latch.dev" into the email input. ` +
-    `Click the "${page.cta}" button. ` +
-    `Confirm a success message containing "${page.successText}" appears on the page.`
+    `Open the page. Type "tester@latch.dev" into any email input if present. ` +
+    `Click the "${cta.label}" button. ` +
+    `Confirm a success message containing "${cta.successText}" appears on the page.`
   );
 }
 
@@ -126,11 +127,11 @@ export function deriveVerdict(runEnd: KaneRunEnd | null, steps: Step[]): Verdict
   return statusOk && codeOk && reasonOk && flowsOk && stepsOk ? "TRUE" : "FALSE";
 }
 
-async function saveRaw(pageId: string, stdout: string): Promise<string | null> {
+async function saveRaw(pageId: string, ctaId: string, stdout: string): Promise<string | null> {
   try {
     const dir = path.join(process.cwd(), "data", "runs");
     await fs.mkdir(dir, { recursive: true });
-    const file = path.join(dir, `${pageId}-${Date.now()}.ndjson`);
+    const file = path.join(dir, `${pageId}-${ctaId}-${Date.now()}.ndjson`);
     await fs.writeFile(file, stdout, "utf8");
     return file;
   } catch {
@@ -138,26 +139,31 @@ async function saveRaw(pageId: string, stdout: string): Promise<string | null> {
   }
 }
 
-/** Run Kane against the page's preview URL and re-derive a verdict from NDJSON. */
-export async function runGate(page: Page, previewUrl: string): Promise<GateResult> {
+/** Run Kane against one CTA on the page and re-derive a verdict from NDJSON. */
+export async function runGate(
+  page: Page,
+  cta: Cta,
+  previewUrl: string,
+): Promise<GateResult> {
   const bin = process.env.KANE_CLI_PATH || "kane-cli";
   const timeoutMs = Number(process.env.KANE_TIMEOUT || 60000);
   const headless = (process.env.KANE_HEADLESS ?? "true") !== "false";
 
-  const objective = buildObjective(page);
+  const objective = buildObjective(cta);
   const args = ["run", objective, "--agent", "--url", previewUrl];
   if (headless) args.push("--headless");
   args.push("--final-validation", "on");
   args.push("--timeout", String(Math.floor(timeoutMs / 1000)));
 
   const stdout = await execKane(bin, args, timeoutMs);
-  const rawPath = await saveRaw(page.id, stdout);
+  const rawPath = await saveRaw(page.id, cta.id, stdout);
   const { steps, runEnd, sessionId } = parseNdjson(stdout);
   const verdict = deriveVerdict(runEnd, steps);
 
   return {
     pageId: page.id,
-    cta: page.cta,
+    ctaId: cta.id,
+    cta: cta.label,
     verdict,
     steps,
     sessionId,

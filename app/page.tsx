@@ -17,9 +17,9 @@ export default async function Home() {
       <div className="panel">
         <p>
           Before a page can publish, Latch opens a <strong>real browser</strong>{" "}
-          and clicks the one button that matters. If the button is broken, the
-          publish is <span className="verdict-false">blocked</span>. Once it is
-          proven working, the page goes live carrying a{" "}
+          and clicks every CTA that matters. If any button is broken, the
+          publish is <span className="verdict-false">blocked</span>. Once every
+          one is proven working, the page goes live carrying a{" "}
           <span className="verdict-true">receipt</span> any visitor can verify.
         </p>
       </div>
@@ -34,7 +34,9 @@ export default async function Home() {
             </span>
           </div>
           <p className="muted" style={{ marginBottom: 4 }}>
-            CTA: {p.cta}
+            {p.ctas.length === 1
+              ? `CTA: ${p.ctas[0].label}`
+              : `CTAs: ${p.ctas.map((c) => c.label).join(" · ")}`}
           </p>
           <div style={{ display: "flex", gap: 16, fontSize: 14 }}>
             <Link href={`/examples/${p.id}`}>Preview</Link>

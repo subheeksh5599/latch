@@ -25,7 +25,8 @@ async function main() {
     process.exit(2);
   }
 
-  console.log(`Latch gate · page "${pageId}" · CTA "${page.cta}"`);
+  const ctaLabels = page.ctas.map((c) => `"${c.label}"`).join(" · ");
+  console.log(`Latch gate · page "${pageId}" · ${page.ctas.length === 1 ? "CTA" : "CTAs"} ${ctaLabels}`);
   console.log(`Preview base: ${previewBase}`);
 
   const outcome = await healAndPublish(pageId, previewBase);

@@ -12,17 +12,25 @@ export default async function Preview({
   const page = await getPage(params.page);
   if (!page) notFound();
 
+  const ctaLabels = page.ctas.map((c) => `"${c.label}"`).join(" · ");
+  const multi = page.ctas.length > 1;
+
   return (
     <main>
       <p className="muted">Preview · not yet published</p>
       <h1>{page.title}</h1>
       <p className="muted">
-        One button that matters: <strong>{page.cta}</strong>. Latch will not
-        let this page go live until a real browser proves it works.
+        {multi ? "Buttons that matter" : "One button that matters"}: <strong>{ctaLabels}</strong>.
+        Latch will not let this page go live until a real browser proves every one works.
       </p>
-      <div className="panel">
-        <CtaForm wired={page.wired} cta={page.cta} successText={page.successText} />
-      </div>
+      {page.ctas.map((cta) => (
+        <div className="panel" key={cta.id}>
+          <p className="muted" style={{ marginBottom: 8 }}>
+            {cta.label}
+          </p>
+          <CtaForm cta={cta} />
+        </div>
+      ))}
     </main>
   );
 }

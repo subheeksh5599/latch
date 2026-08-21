@@ -1,10 +1,11 @@
 /**
  * Reset a page back to its broken, unpublished state so the red→green demo is
- * repeatable. Does NOT delete receipts already issued.
+ * repeatable. Sets every CTA to wired:false. Does NOT delete receipts already
+ * issued.
  *
  *   node --import tsx scripts/reset.ts --page waitlist
  */
-import { updatePage, getPage } from "../lib/store";
+import { getPage, updatePage } from "../lib/store";
 
 async function main() {
   const i = process.argv.indexOf("--page");
@@ -14,8 +15,11 @@ async function main() {
     console.error(`Unknown page "${pageId}".`);
     process.exit(2);
   }
-  await updatePage(pageId, { wired: false, published: false, receiptId: null });
-  console.log(`Reset "${pageId}" → wired:false, published:false (dead button).`);
+  const ctas = page.ctas.map((c) => ({ ...c, wired: false }));
+  await updatePage(pageId, { ctas, published: false, receiptId: null });
+  console.log(
+    `Reset "${pageId}" → every CTA wired:false, published:false (dead buttons).`,
+  );
 }
 
 main().catch((e) => {

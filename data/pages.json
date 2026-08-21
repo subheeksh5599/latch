@@ -3,27 +3,58 @@
     {
       "id": "waitlist",
       "title": "Join the Nimbus waitlist",
-      "cta": "Sign up",
-      "successText": "You're on the list",
-      "wired": false,
-      "published": false,
-      "receiptId": null,
+      "ctas": [
+        {
+          "id": "primary",
+          "label": "Sign up",
+          "successText": "You're on the list",
+          "wired": true
+        }
+      ],
+      "published": true,
+      "receiptId": "waitlist-55023cb6",
       "receipts": [
         "waitlist-1f82a8b0",
-        "waitlist-63e1c505"
+        "waitlist-63e1c505",
+        "waitlist-5935d462",
+        "waitlist-55023cb6"
       ]
     },
     {
       "id": "checkout",
       "title": "Buy the Nimbus Pro plan",
-      "cta": "Buy now",
-      "successText": "Payment confirmed",
-      "wired": false,
+      "ctas": [
+        {
+          "id": "primary",
+          "label": "Buy now",
+          "successText": "Payment confirmed",
+          "wired": false
+        }
+      ],
       "published": false,
       "receiptId": null,
-      "receipts": [
-        "checkout-d2da5b93"
-      ]
+      "receipts": ["checkout-d2da5b93"]
+    },
+    {
+      "id": "launch",
+      "title": "Launch day landing — Nimbus 2.0",
+      "ctas": [
+        {
+          "id": "signup",
+          "label": "Get early access",
+          "successText": "You're on the launch list",
+          "wired": false
+        },
+        {
+          "id": "demo",
+          "label": "Book a demo",
+          "successText": "Demo request received",
+          "wired": false
+        }
+      ],
+      "published": false,
+      "receiptId": null,
+      "receipts": []
     }
   ]
 }

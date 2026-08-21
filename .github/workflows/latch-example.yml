@@ -1,0 +1,33 @@
+# Example workflow: run the Latch publish gate on every pull request.
+# Drop this file (or the same steps) into any repo that uses Latch pages.
+name: Latch publish gate
+
+on:
+  pull_request:
+    paths:
+      - "data/pages.json"
+      - "components/**"
+      - "app/**"
+      - "lib/**"
+  workflow_dispatch:
+    inputs:
+      page:
+        description: "Page id to gate"
+        required: true
+        default: "waitlist"
+
+jobs:
+  gate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Latch — refuse to publish until the CTA is proven
+        uses: ./
+        with:
+          page: ${{ inputs.page || 'waitlist' }}
+          base-url: "http://localhost:3000"
+          receipt-secret: ${{ secrets.LATCH_RECEIPT_SECRET }}
+          kane-token: ${{ secrets.KANE_TOKEN }}
+          publish-webhook-url: ${{ secrets.LATCH_PUBLISH_WEBHOOK_URL }}
+          publish-webhook-secret: ${{ secrets.LATCH_PUBLISH_WEBHOOK_SECRET }}

@@ -1,0 +1,100 @@
+name: "Latch publish gate"
+description: >-
+  Refuse to publish a page until a real browser (Kane CLI) proves its CTA works.
+  Runs the gate, blocks on red, self-heals wiring, publishes on green, and
+  writes an HMAC-signed receipt.
+author: "subheeksh5599"
+branding:
+  icon: "shield"
+  color: "green"
+
+inputs:
+  page:
+    description: "Page id to gate (must exist in data/pages.json)"
+    required: true
+    default: "waitlist"
+  base-url:
+    description: "Base URL Kane opens in Chrome"
+    required: false
+    default: "http://localhost:3000"
+  receipt-secret:
+    description: "HMAC secret used to sign receipts (pass as a repo secret)"
+    required: true
+  kane-token:
+    description: "Kane CLI auth token (pass as a repo secret)"
+    required: true
+  publish-webhook-url:
+    description: "Optional Slack/Discord/generic webhook URL fired on green publish"
+    required: false
+    default: ""
+  publish-webhook-secret:
+    description: "Optional HMAC secret for the publish webhook signature header"
+    required: false
+    default: ""
+  node-version:
+    description: "Node.js version"
+    required: false
+    default: "20"
+
+outputs:
+  published:
+    description: "true / false — whether the page was published this run"
+    value: ${{ steps.gate.outputs.published }}
+  receipt-id:
+    description: "Receipt id issued on green (empty on red)"
+    value: ${{ steps.gate.outputs.receipt_id }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: Set up Node
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ inputs.node-version }}
+
+    - name: Install project + Kane CLI
+      shell: bash
+      run: |
+        npm ci
+        npm install -g @testmuai/kane-cli
+        kane-cli --version
+
+    - name: Start Next.js in the background
+      shell: bash
+      run: |
+        npm run build
+        (npm start -- --port 3000 &) && sleep 5
+        curl -fsS "$BASE_URL/api/health" || (echo "next did not come up" && exit 1)
+      env:
+        BASE_URL: ${{ inputs.base-url }}
+
+    - name: Run the Latch gate
+      id: gate
+      shell: bash
+      env:
+        KANE_TOKEN: ${{ inputs.kane-token }}
+        RECEIPT_SECRET: ${{ inputs.receipt-secret }}
+        PUBLISH_WEBHOOK_URL: ${{ inputs.publish-webhook-url }}
+        PUBLISH_WEBHOOK_SECRET: ${{ inputs.publish-webhook-secret }}
+        PREVIEW_BASE_URL: ${{ inputs.base-url }}
+        KANE_HEADLESS: "true"
+      run: |
+        set -o pipefail
+        npm run latch -- --page "${{ inputs.page }}" | tee latch.log
+        # extract receipt id from the "receipt:   waitlist-XXXX" line
+        RID="$(grep -oE 'receipt:[[:space:]]+[a-z0-9-]+' latch.log | awk '{print $2}' | tail -1 || true)"
+        if [ -n "$RID" ] && [ "$RID" != "(none)" ]; then
+          echo "published=true"  >> "$GITHUB_OUTPUT"
+          echo "receipt_id=$RID" >> "$GITHUB_OUTPUT"
+        else
+          echo "published=false" >> "$GITHUB_OUTPUT"
+          echo "receipt_id="     >> "$GITHUB_OUTPUT"
+        fi
+
+    - name: Upload receipt artifact
+      if: steps.gate.outputs.receipt_id != ''
+      uses: actions/upload-artifact@v4
+      with:
+        name: latch-receipt-${{ steps.gate.outputs.receipt_id }}
+        path: data/receipts/${{ steps.gate.outputs.receipt_id }}.json
+        if-no-files-found: warn

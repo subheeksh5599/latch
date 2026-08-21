@@ -27,13 +27,21 @@ export default async function PublishedPage({
       </Link>
       <h1 style={{ marginTop: 20 }}>{page.title}</h1>
       <p className="muted">
-        This button was proven working by a real browser
+        {page.ctas.length > 1
+          ? "Every button on this page was proven working"
+          : "This button was proven working"}{" "}
+        by a real browser
         {verifiedAt ? ` at ${new Date(verifiedAt).toUTCString()}` : ""}.
         Latch never claims it stays working forever — the receipt says exactly when.
       </p>
-      <div className="panel">
-        <CtaForm wired={page.wired} cta={page.cta} successText={page.successText} />
-      </div>
+      {page.ctas.map((cta) => (
+        <div className="panel" key={cta.id}>
+          <p className="muted" style={{ marginBottom: 8 }}>
+            {cta.label}
+          </p>
+          <CtaForm cta={cta} />
+        </div>
+      ))}
     </main>
   );
 }
